@@ -45,7 +45,78 @@ document.addEventListener('visibilitychange', async () => {
 });
 
 // ─────────────────────────────────────────────
-//  VOICE – Jakub nebo nejlepší česky
+//  TTS ENGINE – Median bridge nebo Web Speech
+// ─────────────────────────────────────────────
+const IS_MEDIAN = !!(window.webkit?.messageHandlers?.median
+  || window.median
+  || navigator.userAgent.includes('median')
+  || navigator.userAgent.includes('gonative'));
+
+let medianSpeaking = false;
+
+// Median TTS callbacks (volá je nativní vrstva)
+window.medianTTSStatus = function(data) {
+  // data = { status: 'started'|'completed'|'error', utteranceId }
+  if (!isPlaying) return;
+  if (data.status === 'completed') {
+    medianSpeaking = false;
+    if (!isPaused && isPlaying) speakChunk(curChunk + 1);
+  }
+  if (data.status === 'error') {
+    medianSpeaking = false;
+    setStatus('Chyba TTS: ' + (data.error || ''), true);
+  }
+};
+
+function medianSpeak(text) {
+  medianSpeaking = true;
+  const payload = {
+    text,
+    lang:           'cs-CZ',
+    rate:           parseFloat(rateR.value),
+    pitch:          parseFloat(pitchR.value),
+    callbackFunction: 'medianTTSStatus'
+  };
+  // Nová Median JS API
+  if (window.median?.tts?.speak) {
+    median.tts.speak(payload);
+    return;
+  }
+  // GoNative / starší Median
+  if (window.gonative?.tts?.speak) {
+    gonative.tts.speak(payload);
+    return;
+  }
+  // URL scheme fallback
+  try {
+    const url = 'gonative://tts/speak?data=' + encodeURIComponent(JSON.stringify(payload));
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = url;
+    document.body.appendChild(iframe);
+    setTimeout(() => iframe.remove(), 500);
+  } catch(e) {
+    // Nic nefungovalo, přepni na Web Speech
+    medianSpeaking = false;
+    webSpeechSpeak(text);
+  }
+}
+
+function medianStop() {
+  medianSpeaking = false;
+  if (window.median?.tts?.stop)  { median.tts.stop();  return; }
+  if (window.gonative?.tts?.stop){ gonative.tts.stop(); return; }
+  try {
+    const iframe = document.createElement('iframe');
+    iframe.style.display = 'none';
+    iframe.src = 'gonative://tts/stop';
+    document.body.appendChild(iframe);
+    setTimeout(() => iframe.remove(), 300);
+  } catch(e) {}
+}
+
+// ─────────────────────────────────────────────
+//  VOICE – Jakub nebo nejlepší česky (Web Speech)
 // ─────────────────────────────────────────────
 function findJakub() {
   const all = synth.getVoices();
@@ -54,8 +125,37 @@ function findJakub() {
     || all.find(v => v.lang.toLowerCase().startsWith('cs'))
     || all[0];
 }
-findJakub();
-if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = findJakub;
+if (!IS_MEDIAN) {
+  findJakub();
+  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = findJakub;
+}
+
+function webSpeechSpeak(text) {
+  const utt   = makeUtt(text);
+  utt.onend   = () => { if (!isPaused && isPlaying) speakChunk(curChunk + 1); };
+  utt.onerror = e  => { if (e.error !== 'interrupted') setStatus('Chyba: ' + e.error, true); };
+  synth.speak(utt);
+}
+
+function ttsSpeak(text) {
+  if (IS_MEDIAN) medianSpeak(text);
+  else           webSpeechSpeak(text);
+}
+
+function ttsStop() {
+  if (IS_MEDIAN) medianStop();
+  else           synth.cancel();
+}
+
+function ttsPause() {
+  if (IS_MEDIAN) medianStop(); // Median neumí pause, stopneme a zapamatujeme pozici
+  else           synth.pause();
+}
+
+function ttsResume() {
+  if (IS_MEDIAN) ttsSpeak(chunks[curChunk]); // Začneme znovu od aktuálního chunku
+  else           synth.resume();
+}
 
 // ─────────────────────────────────────────────
 //  RANGES
@@ -71,8 +171,8 @@ pitchR.addEventListener('input', () => {
 
 function applyParamChange() {
   if (!isPlaying || isPaused) return;
-  synth.cancel();
-  setTimeout(() => speakChunk(curChunk), 80);
+  ttsStop();
+  setTimeout(() => speakChunk(curChunk), 150);
 }
 
 // ─────────────────────────────────────────────
@@ -348,17 +448,13 @@ function speakChunk(i) {
   highlightChunk(i);
   setStatus(`▶ Úsek ${i + 1} / ${chunks.length}`, false, true);
   saveProgress();
-
-  const utt    = makeUtt(chunks[i]);
-  utt.onend    = () => { if (!isPaused && isPlaying) speakChunk(i + 1); };
-  utt.onerror  = e  => { if (e.error !== 'interrupted') setStatus('Chyba: ' + e.error, true); };
-  synth.speak(utt);
+  ttsSpeak(chunks[i]);
 }
 
 function jumpToChunk(idx) {
-  synth.cancel();
+  ttsStop();
   curChunk = idx;
-  if (isPlaying) setTimeout(() => speakChunk(idx), 80);
+  if (isPlaying) setTimeout(() => speakChunk(idx), 150);
   else { highlightChunk(idx); setStatus(`📌 Pozice: ${idx + 1}`); }
 }
 
@@ -367,29 +463,30 @@ function jumpToChunk(idx) {
 // ─────────────────────────────────────────────
 document.getElementById('btnPlay').addEventListener('click', async () => {
   if (!chunks.length) return;
-  synth.cancel(); isPaused = false; isPlaying = true;
+  ttsStop(); isPaused = false; isPlaying = true;
   document.getElementById('btnPause').textContent = '⏸';
   await requestWakeLock();
-  setTimeout(() => speakChunk(curChunk), 80);
+  setTimeout(() => speakChunk(curChunk), 150);
 });
 
 document.getElementById('btnPause').addEventListener('click', () => {
   if (!isPlaying) return;
   if (!isPaused) {
-    synth.pause(); isPaused = true;
+    ttsPause(); isPaused = true;
     document.getElementById('btnPause').textContent = '▶';
     setStatus('⏸ Pozastaveno');
     releaseWakeLock();
   } else {
-    synth.resume(); isPaused = false;
+    isPaused = false;
     document.getElementById('btnPause').textContent = '⏸';
     setStatus('▶ Pokračuji…', false, true);
     requestWakeLock();
+    ttsResume();
   }
 });
 
 document.getElementById('btnStop').addEventListener('click', () => {
-  synth.cancel(); isPaused = false; isPlaying = false;
+  ttsStop(); isPaused = false; isPlaying = false;
   document.getElementById('btnPause').textContent = '⏸';
   setStatus('⏹ Zastaveno');
   saveProgress();
