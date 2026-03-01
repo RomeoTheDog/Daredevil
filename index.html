@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#09090c">
+<meta name="description" content="Daredevil – AudioBook Reader. Čte PDF, TXT, DOCX, EPUB, MOBI nahlas.">
+<title>Daredevil</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="header">
+  <div class="logo-wrap">
+    <div class="logo-icon">🎧</div>
+    <h1>DAREDEVIL</h1>
+  </div>
+  <div class="tagline">AudioBook Reader</div>
+  <div id="wakeBadge" class="wake-badge" style="display:none">🔆 Displej aktivní</div>
+</div>
+
+<div class="card">
+  <div id="dropzone" onclick="document.getElementById('fileInput').click()">
+    <div class="dz-icon">📂</div>
+    <strong>Klikni nebo přetáhni soubor</strong>
+    <div class="dz-formats">
+      <span class="fmt-badge">PDF</span>
+      <span class="fmt-badge">TXT</span>
+      <span class="fmt-badge">DOCX</span>
+      <span class="fmt-badge">EPUB</span>
+      <span class="fmt-badge">MOBI</span>
+    </div>
+  </div>
+  <input type="file" id="fileInput" accept=".txt,.pdf,.docx,.doc,.mobi,.epub">
+  <div id="loadingMsg">⏳ Zpracovávám soubor…</div>
+
+  <div class="or-divider">
+    <div class="or-line"></div>
+    <span>nebo vlož text</span>
+    <div class="or-line"></div>
+  </div>
+  <textarea id="pasteArea" placeholder="Ctrl+V nebo napiš text přímo sem…" spellcheck="false"></textarea>
+</div>
+
+<div class="card" id="chaptersWrap">
+  <div class="sec-title">📑 Kapitoly</div>
+  <div id="chapterList"></div>
+</div>
+
+<div class="card">
+  <div class="ctrl-row">
+    <div class="ctrl-group">
+      <div class="label">Rychlost <span id="rateVal">1.20×</span></div>
+      <input type="range" id="rateRange" min="0.5" max="2" step="0.05" value="1.2">
+    </div>
+    <div class="ctrl-group">
+      <div class="label">Výška tónu <span id="pitchVal">1.00</span></div>
+      <input type="range" id="pitchRange" min="0.5" max="1.8" step="0.05" value="1">
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button id="btnPlay" disabled>▶ Přehrát</button>
+    <button id="btnPause" disabled>⏸</button>
+    <button id="btnStop" disabled>⏹</button>
+    <button id="btnBookmark" title="Uložit záložku">🔖</button>
+  </div>
+
+  <div class="progress-wrap">
+    <div id="progressBar"></div>
+  </div>
+  <div class="progress-info">
+    <span id="chunkInfo">0 / 0 úseků</span>
+    <span id="charInfo"></span>
+  </div>
+
+  <div id="readerView"></div>
+  <div class="status" id="status">Nahraj soubor</div>
+</div>
+
+<div class="card" id="bmWrap">
+  <div class="sec-title">🔖 Záložky</div>
+  <div id="bmList"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
