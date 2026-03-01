@@ -56,6 +56,7 @@ h1{
   border:2px dashed #2a2a35;border-radius:14px;
   padding:32px 20px;text-align:center;cursor:pointer;
   transition:all .25s;background:var(--bg3);
+  display:block;
 }
 #dropzone:hover,#dropzone.over{
   border-color:var(--r);background:#140808;
@@ -68,7 +69,9 @@ h1{
   background:var(--bg4);border:1px solid #2a2a38;border-radius:6px;
   padding:3px 9px;font-size:.68rem;color:var(--muted2);letter-spacing:.05em;
 }
-#fileInput{display:none}
+#fileInput{
+  position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0,0,0,0);
+}
 #loadingMsg{
   display:none;color:var(--r3);font-size:.8rem;text-align:center;
   padding:10px;animation:pulse 1.2s ease-in-out infinite;

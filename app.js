@@ -81,10 +81,11 @@ function applyParamChange() {
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 
-dropzone.addEventListener('dragover', e => { e.preventDefault(); dropzone.classList.add('over'); });
-dropzone.addEventListener('dragleave', () => dropzone.classList.remove('over'));
+// Drag & drop (desktop)
+dropzone.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation(); dropzone.classList.add('over'); });
+dropzone.addEventListener('dragleave', e => { e.stopPropagation(); dropzone.classList.remove('over'); });
 dropzone.addEventListener('drop', e => {
-  e.preventDefault(); dropzone.classList.remove('over');
+  e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('over');
   if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
 });
 fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });

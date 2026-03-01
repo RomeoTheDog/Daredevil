@@ -20,7 +20,7 @@
 </div>
 
 <div class="card">
-  <div id="dropzone" onclick="document.getElementById('fileInput').click()">
+  <label id="dropzone" for="fileInput">
     <div class="dz-icon">📂</div>
     <strong>Klikni nebo přetáhni soubor</strong>
     <div class="dz-formats">
@@ -30,8 +30,8 @@
       <span class="fmt-badge">EPUB</span>
       <span class="fmt-badge">MOBI</span>
     </div>
-  </div>
-  <input type="file" id="fileInput" accept=".txt,.pdf,.docx,.doc,.mobi,.epub">
+  </label>
+  <input type="file" id="fileInput" accept=".txt,.pdf,.docx,.doc,.mobi,.epub,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/epub+zip,application/x-mobipocket-ebook">
   <div id="loadingMsg">⏳ Zpracovávám soubor…</div>
 
   <div class="or-divider">
