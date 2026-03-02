@@ -6,6 +6,7 @@
 <meta name="theme-color" content="#09090c">
 <meta name="description" content="Daredevil – AudioBook Reader">
 <title>Daredevil</title>
+<script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -312,8 +313,6 @@ button{
 // ─────────────────────────────────────────────
 //  GLOBALS
 // ─────────────────────────────────────────────
-const synth = window.speechSynthesis;
-let jakub = null;
 let chunks = [], curChunk = 0, isPaused = false, isPlaying = false;
 let chapters = [], bookmarks = [], currentFile = null;
 let wakeLock = null;
@@ -321,17 +320,6 @@ let wakeLock = null;
 const LS_KEY = 'daredevil_v3';
 const rateR  = document.getElementById('rateRange');
 const pitchR = document.getElementById('pitchRange');
-
-// ─────────────────────────────────────────────
-//  MEDIAN / GONATIVE DETECTION
-// ─────────────────────────────────────────────
-const IS_MEDIAN = !!(
-  window.webkit?.messageHandlers?.median ||
-  window.median ||
-  window.gonative ||
-  navigator.userAgent.includes('median') ||
-  navigator.userAgent.includes('gonative')
-);
 
 // ─────────────────────────────────────────────
 //  WAKE LOCK
@@ -355,79 +343,53 @@ document.addEventListener('visibilitychange', async () => {
 });
 
 // ─────────────────────────────────────────────
-//  TTS ENGINE
+//  TTS ENGINE – ResponsiveVoice + Web Speech fallback
 // ─────────────────────────────────────────────
-window.medianTTSStatus = function(data) {
-  if (!isPlaying) return;
-  if (data.status === 'completed') {
-    if (!isPaused && isPlaying) speakChunk(curChunk + 1);
+const RV_VOICE = 'Czech Female';  // ResponsiveVoice hlas pro češtinu
+
+function ttsSpeak(text) {
+  const rate  = parseFloat(rateR.value);
+  const pitch = parseFloat(pitchR.value);
+
+  if (window.responsiveVoice && responsiveVoice.voiceSupport()) {
+    responsiveVoice.speak(text, RV_VOICE, {
+      rate,
+      pitch,
+      onend:   () => { if (!isPaused && isPlaying) speakChunk(curChunk + 1); },
+      onerror: () => setStatus('Chyba TTS', true)
+    });
+  } else {
+    // Fallback – Web Speech API (desktop Chrome, Safari)
+    const synth = window.speechSynthesis;
+    const all   = synth.getVoices();
+    const voice = all.find(v => /jakub/i.test(v.name))
+               || all.find(v => v.lang.toLowerCase().startsWith('cs'))
+               || all[0];
+    const utt   = new SpeechSynthesisUtterance(text);
+    if (voice) utt.voice = voice;
+    utt.rate  = rate;
+    utt.pitch = pitch;
+    utt.lang  = voice ? voice.lang : 'cs-CZ';
+    utt.onend  = () => { if (!isPaused && isPlaying) speakChunk(curChunk + 1); };
+    utt.onerror = e => { if (e.error !== 'interrupted') setStatus('Chyba: ' + e.error, true); };
+    synth.speak(utt);
   }
-  if (data.status === 'error') setStatus('Chyba TTS', true);
-};
-
-function medianSpeak(text) {
-  const payload = {
-    text,
-    lang: 'cs-CZ',
-    rate: parseFloat(rateR.value),
-    pitch: parseFloat(pitchR.value),
-    callbackFunction: 'medianTTSStatus'
-  };
-  if (window.median?.tts?.speak)  { median.tts.speak(payload);  return; }
-  if (window.gonative?.tts?.speak){ gonative.tts.speak(payload); return; }
-  try {
-    const fr = document.createElement('iframe');
-    fr.style.display = 'none';
-    fr.src = 'gonative://tts/speak?data=' + encodeURIComponent(JSON.stringify(payload));
-    document.body.appendChild(fr);
-    setTimeout(() => fr.remove(), 500);
-  } catch(e) { webSpeechSpeak(text); }
 }
 
-function medianStop() {
-  if (window.median?.tts?.stop)  { median.tts.stop();  return; }
-  if (window.gonative?.tts?.stop){ gonative.tts.stop(); return; }
-  try {
-    const fr = document.createElement('iframe');
-    fr.style.display = 'none';
-    fr.src = 'gonative://tts/stop';
-    document.body.appendChild(fr);
-    setTimeout(() => fr.remove(), 300);
-  } catch(e) {}
+function ttsStop() {
+  if (window.responsiveVoice) responsiveVoice.cancel();
+  if (window.speechSynthesis) speechSynthesis.cancel();
 }
 
-function findJakub() {
-  const all = synth.getVoices();
-  if (!all.length) return;
-  jakub = all.find(v => /jakub/i.test(v.name))
-    || all.find(v => v.lang.toLowerCase().startsWith('cs'))
-    || all[0];
-}
-if (!IS_MEDIAN) {
-  findJakub();
-  if (synth.onvoiceschanged !== undefined) synth.onvoiceschanged = findJakub;
+function ttsPause() {
+  if (window.responsiveVoice) responsiveVoice.cancel(); // RV neumí pause, zapamatujeme chunk
+  else if (window.speechSynthesis) speechSynthesis.pause();
 }
 
-function makeUtt(text) {
-  const u = new SpeechSynthesisUtterance(text);
-  if (jakub) u.voice = jakub;
-  u.rate  = parseFloat(rateR.value);
-  u.pitch = parseFloat(pitchR.value);
-  u.lang  = jakub ? jakub.lang : 'cs-CZ';
-  return u;
+function ttsResume() {
+  if (window.responsiveVoice) ttsSpeak(chunks[curChunk]); // znovu od aktuálního chunku
+  else if (window.speechSynthesis) speechSynthesis.resume();
 }
-
-function webSpeechSpeak(text) {
-  const utt  = makeUtt(text);
-  utt.onend  = () => { if (!isPaused && isPlaying) speakChunk(curChunk + 1); };
-  utt.onerror = e => { if (e.error !== 'interrupted') setStatus('Chyba: ' + e.error, true); };
-  synth.speak(utt);
-}
-
-function ttsSpeak(text) { IS_MEDIAN ? medianSpeak(text) : webSpeechSpeak(text); }
-function ttsStop()  { IS_MEDIAN ? medianStop()  : synth.cancel(); }
-function ttsPause() { IS_MEDIAN ? medianStop()  : synth.pause(); }
-function ttsResume(){ IS_MEDIAN ? ttsSpeak(chunks[curChunk]) : synth.resume(); }
 
 // ─────────────────────────────────────────────
 //  RANGES
