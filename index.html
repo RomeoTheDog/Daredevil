@@ -4,9 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <meta name="theme-color" content="#09090c">
-<meta name="description" content="Daredevil – AudioBook Reader">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Daredevil">
 <title>Daredevil</title>
-<script src="https://code.responsivevoice.org/responsivevoice.js?key=FREE"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
@@ -14,226 +14,76 @@
   --bg:#09090c;--bg2:#111118;--bg3:#18181f;--bg4:#1e1e28;
   --border:#252530;--text:#eeeef5;--muted:#555;--muted2:#888;
 }
-body{
-  font-family:'Segoe UI',system-ui,sans-serif;
-  background:var(--bg);color:var(--text);
-  min-height:100vh;display:flex;flex-direction:column;
-  align-items:center;padding:28px 14px;
-}
-
-/* HEADER */
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 14px}
 .header{text-align:center;margin-bottom:28px}
 .logo-wrap{display:inline-flex;align-items:center;gap:14px;margin-bottom:6px}
-.logo-icon{
-  width:52px;height:52px;border-radius:14px;
-  background:linear-gradient(135deg,#5a0000,var(--r));
-  display:flex;align-items:center;justify-content:center;
-  font-size:1.6rem;box-shadow:0 0 32px rgba(160,0,0,.55);
-  position:relative;overflow:hidden;
-}
-.logo-icon::after{
-  content:'';position:absolute;inset:0;
-  background:linear-gradient(135deg,rgba(255,255,255,.07),transparent);
-}
-h1{
-  font-size:2.1rem;font-weight:900;letter-spacing:-1.5px;
-  background:linear-gradient(135deg,#6b0000,var(--r2),var(--r3));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
-  line-height:1;
-}
+.logo-icon{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#5a0000,var(--r));display:flex;align-items:center;justify-content:center;font-size:1.6rem;box-shadow:0 0 32px rgba(160,0,0,.55);position:relative;overflow:hidden}
+.logo-icon::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,.07),transparent)}
+h1{font-size:2.1rem;font-weight:900;letter-spacing:-1.5px;background:linear-gradient(135deg,#6b0000,var(--r2),var(--r3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;line-height:1}
 .tagline{font-size:.72rem;color:var(--muted);letter-spacing:.18em;text-transform:uppercase;margin-top:4px}
-.wake-badge{
-  display:inline-block;margin-top:8px;
-  font-size:.68rem;color:#68d391;background:#0d1f12;
-  border:1px solid #1a4a22;border-radius:20px;
-  padding:3px 10px;letter-spacing:.05em;
-}
-
-/* CARDS */
-.card{
-  background:var(--bg2);border:1px solid var(--border);
-  border-radius:20px;padding:22px;
-  width:100%;max-width:720px;margin-bottom:14px;
-  position:relative;overflow:hidden;
-}
-.card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:1px;
-  background:linear-gradient(90deg,transparent,rgba(160,0,0,.35),transparent);
-}
-
-/* DROP ZONE */
-#dropzone{
-  border:2px dashed #2a2a35;border-radius:14px;
-  padding:32px 20px;text-align:center;cursor:pointer;
-  transition:all .25s;background:var(--bg3);display:block;
-}
-#dropzone:hover,#dropzone.over{
-  border-color:var(--r);background:#140808;
-  box-shadow:0 0 24px rgba(160,0,0,.15) inset;
-}
-#dropzone .dz-icon{font-size:2.4rem;margin-bottom:10px;filter:drop-shadow(0 0 8px rgba(204,26,26,.4))}
+.wake-badge{display:inline-block;margin-top:8px;font-size:.68rem;color:#68d391;background:#0d1f12;border:1px solid #1a4a22;border-radius:20px;padding:3px 10px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:22px;width:100%;max-width:720px;margin-bottom:14px;position:relative;overflow:hidden}
+.card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(160,0,0,.35),transparent)}
+#dropzone{border:2px dashed #2a2a35;border-radius:14px;padding:32px 20px;text-align:center;cursor:pointer;transition:all .25s;background:var(--bg3);display:block}
+#dropzone:hover,#dropzone.over{border-color:var(--r);background:#140808}
+#dropzone .dz-icon{font-size:2.4rem;margin-bottom:10px}
 #dropzone strong{color:#ccc;font-size:.95rem}
 .dz-formats{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-top:10px}
-.fmt-badge{
-  background:var(--bg4);border:1px solid #2a2a38;border-radius:6px;
-  padding:3px 9px;font-size:.68rem;color:var(--muted2);letter-spacing:.05em;
-}
-#fileInput{
-  position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0,0,0,0);
-}
-#loadingMsg{
-  display:none;color:var(--r3);font-size:.8rem;text-align:center;
-  padding:10px;animation:pulse 1.2s ease-in-out infinite;
-}
+.fmt-badge{background:var(--bg4);border:1px solid #2a2a38;border-radius:6px;padding:3px 9px;font-size:.68rem;color:var(--muted2)}
+#fileInput{position:absolute;width:1px;height:1px;opacity:0;overflow:hidden;clip:rect(0,0,0,0)}
+#loadingMsg{display:none;color:var(--r3);font-size:.8rem;text-align:center;padding:10px;animation:pulse 1.2s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
-
-/* OR DIVIDER */
 .or-divider{display:flex;align-items:center;gap:10px;margin:14px 0 6px}
 .or-line{flex:1;height:1px;background:var(--border)}
 .or-divider span{font-size:.7rem;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
-
-/* PASTE AREA */
-#pasteArea{
-  width:100%;height:130px;background:var(--bg3);
-  border:1px solid var(--border);border-radius:12px;
-  color:#ccc;font-size:.85rem;line-height:1.7;padding:12px 14px;
-  resize:vertical;outline:none;font-family:Georgia,serif;
-  transition:border-color .2s;
-}
+#pasteArea{width:100%;height:130px;background:var(--bg3);border:1px solid var(--border);border-radius:12px;color:#ccc;font-size:.85rem;line-height:1.7;padding:12px 14px;resize:vertical;outline:none;font-family:Georgia,serif;transition:border-color .2s}
 #pasteArea:focus{border-color:var(--r)}
-
-/* CHAPTERS */
 #chaptersWrap{display:none}
-.sec-title{
-  font-size:.68rem;color:var(--muted);text-transform:uppercase;
-  letter-spacing:.1em;margin-bottom:10px;display:flex;align-items:center;gap:8px;
-}
+.sec-title{font-size:.68rem;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;display:flex;align-items:center;gap:8px}
 .sec-title::after{content:'';flex:1;height:1px;background:var(--border)}
-#chapterList{
-  max-height:200px;overflow-y:auto;
-  border:1px solid var(--border);border-radius:12px;background:var(--bg3);
-}
-.chap-item{
-  padding:11px 16px;cursor:pointer;
-  border-bottom:1px solid var(--border);
-  font-size:.84rem;display:flex;align-items:center;gap:12px;transition:background .15s;
-}
+#chapterList{max-height:200px;overflow-y:auto;border:1px solid var(--border);border-radius:12px;background:var(--bg3)}
+.chap-item{padding:11px 16px;cursor:pointer;border-bottom:1px solid var(--border);font-size:.84rem;display:flex;align-items:center;gap:12px;transition:background .15s}
 .chap-item:last-child{border-bottom:none}
 .chap-item:hover{background:#1a1a24}
 .chap-item.active-chap{background:#1a0808;border-left:3px solid var(--r)}
-.chap-num{font-size:.68rem;color:var(--muted);min-width:22px;font-variant-numeric:tabular-nums}
+.chap-num{font-size:.68rem;color:var(--muted);min-width:22px}
 .chap-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ccc}
-
-/* CONTROLS */
 .ctrl-row{display:flex;gap:14px;flex-wrap:wrap;align-items:flex-end;margin-bottom:16px}
 .ctrl-group{display:flex;flex-direction:column;flex:1;min-width:130px}
-.label{
-  font-size:.68rem;color:var(--muted);margin-bottom:6px;
-  text-transform:uppercase;letter-spacing:.07em;
-  display:flex;justify-content:space-between;align-items:center;
-}
+.label{font-size:.68rem;color:var(--muted);margin-bottom:6px;text-transform:uppercase;letter-spacing:.07em;display:flex;justify-content:space-between;align-items:center}
 .label span{color:var(--muted2);font-size:.75rem;text-transform:none;letter-spacing:0}
-
-input[type=range]{
-  -webkit-appearance:none;appearance:none;
-  width:100%;height:4px;border-radius:2px;
-  background:var(--bg4);outline:none;cursor:pointer;
-  margin-top:10px;display:block;
-}
-input[type=range]::-webkit-slider-runnable-track{
-  height:4px;border-radius:2px;background:var(--bg4);
-}
-input[type=range]::-webkit-slider-thumb{
-  -webkit-appearance:none;appearance:none;
-  width:18px;height:18px;border-radius:50%;
-  background:var(--r2);box-shadow:0 0 8px rgba(204,26,26,.6);
-  cursor:pointer;transition:transform .15s;margin-top:-7px;
-}
-input[type=range]::-webkit-slider-thumb:hover{transform:scale(1.2)}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:2px;background:var(--bg4);outline:none;cursor:pointer;margin-top:10px;display:block}
+input[type=range]::-webkit-slider-runnable-track{height:4px;border-radius:2px;background:var(--bg4)}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;border-radius:50%;background:var(--r2);box-shadow:0 0 8px rgba(204,26,26,.6);cursor:pointer;margin-top:-7px}
 input[type=range]::-moz-range-track{height:4px;border-radius:2px;background:var(--bg4)}
-input[type=range]::-moz-range-thumb{
-  width:18px;height:18px;border-radius:50%;border:none;
-  background:var(--r2);box-shadow:0 0 8px rgba(204,26,26,.6);cursor:pointer;
-}
-
-/* BUTTONS */
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;border:none;background:var(--r2);cursor:pointer}
 .btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-button{
-  border:none;border-radius:12px;cursor:pointer;
-  font-weight:700;padding:13px 18px;transition:all .18s;
-  touch-action:manipulation;font-family:inherit;
-}
-#btnPlay{
-  background:linear-gradient(135deg,#6b0000,var(--r),var(--r2));
-  color:white;flex:2;font-size:1rem;letter-spacing:.3px;
-  box-shadow:0 4px 20px rgba(160,0,0,.4);
-}
-#btnPlay:hover{opacity:.9;transform:translateY(-1px);box-shadow:0 6px 24px rgba(160,0,0,.5)}
-#btnPlay:active{transform:translateY(0)}
+button{border:none;border-radius:12px;cursor:pointer;font-weight:700;padding:13px 18px;transition:all .18s;touch-action:manipulation;font-family:inherit}
+#btnPlay{background:linear-gradient(135deg,#6b0000,var(--r),var(--r2));color:white;flex:2;font-size:1rem;box-shadow:0 4px 20px rgba(160,0,0,.4)}
+#btnPlay:hover{opacity:.9;transform:translateY(-1px)}
 #btnPlay:disabled{opacity:.35;transform:none;box-shadow:none;cursor:default}
-#btnPause,#btnStop{
-  background:var(--bg4);color:#bbb;flex:1;font-size:.95rem;
-  border:1px solid var(--border);
-}
+#btnPause,#btnStop{background:var(--bg4);color:#bbb;flex:1;font-size:.95rem;border:1px solid var(--border)}
 #btnPause:hover,#btnStop:hover{background:#222230;color:#eee}
-#btnBookmark{
-  background:var(--bg4);color:#f6d365;
-  border:1px solid #3a3020;font-size:1rem;padding:13px 15px;
-}
-#btnBookmark:hover{background:#221f0a;border-color:#5a4a20}
-
-/* PROGRESS */
+#btnBookmark{background:var(--bg4);color:#f6d365;border:1px solid #3a3020;font-size:1rem;padding:13px 15px}
 .progress-wrap{background:var(--bg4);border-radius:6px;height:6px;overflow:hidden}
-#progressBar{
-  height:100%;
-  background:linear-gradient(90deg,#6b0000,var(--r2),var(--r3));
-  width:0%;transition:width .35s cubic-bezier(.4,0,.2,1);
-  box-shadow:0 0 10px rgba(204,26,26,.4);
-}
-.progress-info{
-  display:flex;justify-content:space-between;
-  margin-top:6px;font-size:.7rem;color:var(--muted);
-}
-
-/* READER VIEW */
-#readerView{
-  display:none;background:var(--bg);
-  border:1px solid var(--border);border-radius:12px;
-  padding:16px;max-height:170px;overflow-y:auto;
-  line-height:1.85;font-family:Georgia,serif;font-size:.88rem;
-  color:#888;margin-top:14px;
-}
-.chunk.active{
-  background:rgba(160,0,0,.22);color:#ffd;
-  border-radius:4px;padding:1px 5px;
-  box-shadow:0 0 0 1px rgba(160,0,0,.3);
-}
-
-.status{
-  text-align:center;font-size:.76rem;color:var(--muted);
-  margin-top:10px;min-height:18px;transition:color .2s;
-}
+#progressBar{height:100%;background:linear-gradient(90deg,#6b0000,var(--r2),var(--r3));width:0%;transition:width .35s cubic-bezier(.4,0,.2,1);box-shadow:0 0 10px rgba(204,26,26,.4)}
+.progress-info{display:flex;justify-content:space-between;margin-top:6px;font-size:.7rem;color:var(--muted)}
+#readerView{display:none;background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;max-height:170px;overflow-y:auto;line-height:1.85;font-family:Georgia,serif;font-size:.88rem;color:#888;margin-top:14px}
+.chunk.active{background:rgba(160,0,0,.22);color:#ffd;border-radius:4px;padding:1px 5px;box-shadow:0 0 0 1px rgba(160,0,0,.3)}
+.status{text-align:center;font-size:.76rem;color:var(--muted);margin-top:10px;min-height:18px}
 .status.playing{color:var(--r3)}
 .status.error{color:#f87171}
 .status.ok{color:#68d391}
-
-/* BOOKMARKS */
 #bmWrap{display:none}
 #bmList{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.bm-tag{
-  background:var(--bg3);border:1px solid #3a3010;border-radius:8px;
-  padding:7px 12px;font-size:.75rem;color:#f6d365;cursor:pointer;
-  display:flex;align-items:center;gap:8px;transition:all .15s;
-}
-.bm-tag:hover{background:#1e1a08;border-color:#6a5a20}
-.bm-del{color:#f87171;font-weight:900;opacity:.6;transition:opacity .15s}
-.bm-tag:hover .bm-del{opacity:1}
-
-/* SCROLLBAR */
+.bm-tag{background:var(--bg3);border:1px solid #3a3010;border-radius:8px;padding:7px 12px;font-size:.75rem;color:#f6d365;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all .15s}
+.bm-del{color:#f87171;font-weight:900;opacity:.6}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--bg)}
 ::-webkit-scrollbar-thumb{background:#2a2a3a;border-radius:2px}
-::-webkit-scrollbar-thumb:hover{background:#3a3a4a}
+
+/* TTS engine badge */
+#ttsBadge{font-size:.68rem;color:var(--muted2);text-align:center;margin-top:6px}
 </style>
 </head>
 <body>
@@ -262,11 +112,7 @@ button{
   <input type="file" id="fileInput"
     accept=".txt,.pdf,.docx,.doc,.mobi,.epub,application/pdf,text/plain,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/epub+zip,application/x-mobipocket-ebook">
   <div id="loadingMsg">⏳ Zpracovávám soubor…</div>
-  <div class="or-divider">
-    <div class="or-line"></div>
-    <span>nebo vlož text</span>
-    <div class="or-line"></div>
-  </div>
+  <div class="or-divider"><div class="or-line"></div><span>nebo vlož text</span><div class="or-line"></div></div>
   <textarea id="pasteArea" placeholder="Ctrl+V nebo napiš text přímo sem…" spellcheck="false"></textarea>
 </div>
 
@@ -286,22 +132,20 @@ button{
       <input type="range" id="pitchRange" min="0.5" max="1.8" step="0.05" value="1">
     </div>
   </div>
-
   <div class="btn-row">
     <button id="btnPlay" disabled>▶ Přehrát</button>
     <button id="btnPause" disabled>⏸</button>
     <button id="btnStop" disabled>⏹</button>
-    <button id="btnBookmark" title="Uložit záložku">🔖</button>
+    <button id="btnBookmark" title="Záložka">🔖</button>
   </div>
-
   <div class="progress-wrap"><div id="progressBar"></div></div>
   <div class="progress-info">
     <span id="chunkInfo">0 / 0 úseků</span>
     <span id="charInfo"></span>
   </div>
-
   <div id="readerView"></div>
   <div class="status" id="status">Nahraj soubor nebo vlož text</div>
+  <div id="ttsBadge"></div>
 </div>
 
 <div class="card" id="bmWrap">
@@ -310,20 +154,33 @@ button{
 </div>
 
 <script>
-// ─────────────────────────────────────────────
-//  GLOBALS
-// ─────────────────────────────────────────────
-let chunks = [], curChunk = 0, isPaused = false, isPlaying = false;
-let chapters = [], bookmarks = [], currentFile = null;
-let wakeLock = null;
+// ── GLOBALS ──────────────────────────────────
+let chunks=[], curChunk=0, isPaused=false, isPlaying=false;
+let chapters=[], bookmarks=[], currentFile=null, wakeLock=null;
+const LS='daredevil_v3';
+const rateR=document.getElementById('rateRange');
+const pitchR=document.getElementById('pitchRange');
 
-const LS_KEY = 'daredevil_v3';
-const rateR  = document.getElementById('rateRange');
-const pitchR = document.getElementById('pitchRange');
+// ── TTS ENGINE DETECTION ─────────────────────
+// Detekujeme prostředí a zvolíme nejlepší dostupný engine
+let TTS_ENGINE = 'none';
 
-// ─────────────────────────────────────────────
-//  WAKE LOCK
-// ─────────────────────────────────────────────
+function detectEngine() {
+  // 1. Median / GoNative nativní bridge
+  if (window.gonative || window.median ||
+      navigator.userAgent.toLowerCase().includes('gonative') ||
+      navigator.userAgent.toLowerCase().includes('median')) {
+    TTS_ENGINE = 'gonative';
+  }
+  // 2. Web Speech API (Chrome desktop, Safari, mobilní Chrome přes web)
+  else if (window.speechSynthesis) {
+    TTS_ENGINE = 'webspeech';
+  }
+  document.getElementById('ttsBadge').textContent = 'Engine: ' + TTS_ENGINE;
+}
+detectEngine();
+
+// ── WAKE LOCK ────────────────────────────────
 async function requestWakeLock() {
   if (!('wakeLock' in navigator)) return;
   try {
@@ -332,93 +189,130 @@ async function requestWakeLock() {
     wakeLock.addEventListener('release', () => {
       document.getElementById('wakeBadge').style.display = 'none';
     });
-  } catch(e) {}
+  } catch(e){}
 }
 async function releaseWakeLock() {
-  if (wakeLock) { await wakeLock.release(); wakeLock = null; }
+  if (wakeLock) { await wakeLock.release(); wakeLock=null; }
   document.getElementById('wakeBadge').style.display = 'none';
 }
-document.addEventListener('visibilitychange', async () => {
-  if (document.visibilityState === 'visible' && isPlaying && !wakeLock) requestWakeLock();
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState==='visible' && isPlaying && !wakeLock) requestWakeLock();
 });
 
-// ─────────────────────────────────────────────
-//  TTS ENGINE – ResponsiveVoice + Web Speech fallback
-// ─────────────────────────────────────────────
-const RV_VOICE = 'Czech Female';  // ResponsiveVoice hlas pro češtinu
-
-function ttsSpeak(text) {
-  const rate  = parseFloat(rateR.value);
-  const pitch = parseFloat(pitchR.value);
-
-  if (window.responsiveVoice && responsiveVoice.voiceSupport()) {
-    responsiveVoice.speak(text, RV_VOICE, {
-      rate,
-      pitch,
-      onend:   () => { if (!isPaused && isPlaying) speakChunk(curChunk + 1); },
-      onerror: () => setStatus('Chyba TTS', true)
-    });
-  } else {
-    // Fallback – Web Speech API (desktop Chrome, Safari)
-    const synth = window.speechSynthesis;
-    const all   = synth.getVoices();
-    const voice = all.find(v => /jakub/i.test(v.name))
-               || all.find(v => v.lang.toLowerCase().startsWith('cs'))
-               || all[0];
-    const utt   = new SpeechSynthesisUtterance(text);
-    if (voice) utt.voice = voice;
-    utt.rate  = rate;
-    utt.pitch = pitch;
-    utt.lang  = voice ? voice.lang : 'cs-CZ';
-    utt.onend  = () => { if (!isPaused && isPlaying) speakChunk(curChunk + 1); };
-    utt.onerror = e => { if (e.error !== 'interrupted') setStatus('Chyba: ' + e.error, true); };
-    synth.speak(utt);
+// ── GONATIVE TTS ─────────────────────────────
+// Median/GoNative volá window.ttsCallback když chunk doběhne
+window.ttsCallback = function(data) {
+  if (!isPlaying || isPaused) return;
+  if (data && (data.status==='done' || data.status==='completed' || data==='done')) {
+    speakChunk(curChunk + 1);
   }
+};
+
+function gonativeSpeak(text) {
+  const params = {
+    text: text,
+    locale: 'cs-CZ',
+    rate: parseFloat(rateR.value),
+    pitch: parseFloat(pitchR.value),
+    callbackFunction: 'ttsCallback'
+  };
+
+  // Zkus všechny možné způsoby volání
+  if (window.gonative && gonative.tts && gonative.tts.speak) {
+    gonative.tts.speak(params); return;
+  }
+  if (window.median && median.tts && median.tts.speak) {
+    median.tts.speak(params); return;
+  }
+  // URL scheme přes iframe
+  const url = 'gonative://tts/speak?data=' + encodeURIComponent(JSON.stringify(params));
+  const fr = document.createElement('iframe');
+  fr.setAttribute('src', url);
+  fr.style.display = 'none';
+  document.body.appendChild(fr);
+  setTimeout(() => document.body.removeChild(fr), 1000);
 }
 
+function gonativeStop() {
+  const params = {};
+  if (window.gonative && gonative.tts && gonative.tts.stop) { gonative.tts.stop(params); return; }
+  if (window.median && median.tts && median.tts.stop) { median.tts.stop(params); return; }
+  const fr = document.createElement('iframe');
+  fr.setAttribute('src', 'gonative://tts/stop');
+  fr.style.display = 'none';
+  document.body.appendChild(fr);
+  setTimeout(() => document.body.removeChild(fr), 500);
+}
+
+// ── WEB SPEECH TTS ───────────────────────────
+let wsVoice = null;
+function loadVoices() {
+  const all = speechSynthesis.getVoices();
+  if (!all.length) return;
+  wsVoice = all.find(v => /jakub/i.test(v.name))
+    || all.find(v => v.lang.toLowerCase().startsWith('cs'))
+    || all[0];
+}
+if (window.speechSynthesis) {
+  loadVoices();
+  speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function webSpeechSpeak(text) {
+  const u = new SpeechSynthesisUtterance(text);
+  if (wsVoice) u.voice = wsVoice;
+  u.rate  = parseFloat(rateR.value);
+  u.pitch = parseFloat(pitchR.value);
+  u.lang  = wsVoice ? wsVoice.lang : 'cs-CZ';
+  u.onend  = () => { if (!isPaused && isPlaying) speakChunk(curChunk+1); };
+  u.onerror = e => { if (e.error!=='interrupted') setStatus('Chyba: '+e.error, true); };
+  speechSynthesis.speak(u);
+}
+
+// ── UNIFIED TTS API ──────────────────────────
+function ttsSpeak(text) {
+  if (TTS_ENGINE==='gonative') gonativeSpeak(text);
+  else if (TTS_ENGINE==='webspeech') webSpeechSpeak(text);
+  else setStatus('TTS není dostupné v tomto prostředí', true);
+}
 function ttsStop() {
-  if (window.responsiveVoice) responsiveVoice.cancel();
-  if (window.speechSynthesis) speechSynthesis.cancel();
+  if (TTS_ENGINE==='gonative') gonativeStop();
+  else if (window.speechSynthesis) speechSynthesis.cancel();
 }
-
 function ttsPause() {
-  if (window.responsiveVoice) responsiveVoice.cancel(); // RV neumí pause, zapamatujeme chunk
+  if (TTS_ENGINE==='gonative') gonativeStop();
   else if (window.speechSynthesis) speechSynthesis.pause();
 }
-
 function ttsResume() {
-  if (window.responsiveVoice) ttsSpeak(chunks[curChunk]); // znovu od aktuálního chunku
+  // GoNative neumí pause → restart chunku
+  if (TTS_ENGINE==='gonative') ttsSpeak(chunks[curChunk]);
   else if (window.speechSynthesis) speechSynthesis.resume();
 }
 
-// ─────────────────────────────────────────────
-//  RANGES
-// ─────────────────────────────────────────────
+// ── RANGES ───────────────────────────────────
 rateR.addEventListener('input', () => {
-  document.getElementById('rateVal').textContent = parseFloat(rateR.value).toFixed(2) + '×';
-  if (isPlaying && !isPaused) { ttsStop(); setTimeout(() => speakChunk(curChunk), 150); }
+  document.getElementById('rateVal').textContent = parseFloat(rateR.value).toFixed(2)+'×';
+  if (isPlaying && !isPaused) { ttsStop(); setTimeout(()=>speakChunk(curChunk),150); }
 });
 pitchR.addEventListener('input', () => {
   document.getElementById('pitchVal').textContent = parseFloat(pitchR.value).toFixed(2);
-  if (isPlaying && !isPaused) { ttsStop(); setTimeout(() => speakChunk(curChunk), 150); }
+  if (isPlaying && !isPaused) { ttsStop(); setTimeout(()=>speakChunk(curChunk),150); }
 });
 
-// ─────────────────────────────────────────────
-//  FILE HANDLING
-// ─────────────────────────────────────────────
+// ── FILE HANDLING ────────────────────────────
 const dropzone = document.getElementById('dropzone');
 const fileInput = document.getElementById('fileInput');
 
-dropzone.addEventListener('dragover', e => { e.preventDefault(); e.stopPropagation(); dropzone.classList.add('over'); });
-dropzone.addEventListener('dragleave', e => { e.stopPropagation(); dropzone.classList.remove('over'); });
-dropzone.addEventListener('drop', e => {
-  e.preventDefault(); e.stopPropagation(); dropzone.classList.remove('over');
-  if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+dropzone.addEventListener('dragover', e=>{e.preventDefault();e.stopPropagation();dropzone.classList.add('over')});
+dropzone.addEventListener('dragleave', e=>{e.stopPropagation();dropzone.classList.remove('over')});
+dropzone.addEventListener('drop', e=>{
+  e.preventDefault();e.stopPropagation();dropzone.classList.remove('over');
+  if(e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
 });
-fileInput.addEventListener('change', () => { if (fileInput.files[0]) handleFile(fileInput.files[0]); });
-document.getElementById('pasteArea').addEventListener('input', () => {
+fileInput.addEventListener('change', ()=>{ if(fileInput.files[0]) handleFile(fileInput.files[0]); });
+document.getElementById('pasteArea').addEventListener('input', ()=>{
   const txt = document.getElementById('pasteArea').value.trim();
-  if (txt.length > 10) { currentFile = '__paste__'; initText(txt); }
+  if (txt.length>10) { currentFile='__paste__'; initText(txt); }
 });
 
 async function handleFile(file) {
@@ -426,319 +320,259 @@ async function handleFile(file) {
   const loading = document.getElementById('loadingMsg');
   loading.style.display = 'block';
   setStatus('Načítám…');
-  ttsStop(); isPlaying = false; isPaused = false;
+  ttsStop(); isPlaying=false; isPaused=false;
   try {
-    let text = '';
+    let text='';
     const ext = file.name.split('.').pop().toLowerCase();
-    if      (ext === 'pdf')              text = await parsePDF(file);
-    else if (ext === 'docx'||ext==='doc') text = await parseDOCX(file);
-    else if (ext === 'epub')             text = await parseEPUB(file);
-    else if (ext === 'mobi')             text = await parseMOBI(file);
-    else                                 text = await file.text();
+    if      (ext==='pdf')            text = await parsePDF(file);
+    else if (ext==='docx'||ext==='doc') text = await parseDOCX(file);
+    else if (ext==='epub')           text = await parseEPUB(file);
+    else if (ext==='mobi')           text = await parseMOBI(file);
+    else                             text = await file.text();
     text = text.trim();
     if (!text) throw new Error('Soubor neobsahuje čitelný text');
-    loading.style.display = 'none';
-    dropzone.querySelector('strong').textContent = '✅ ' + file.name;
+    loading.style.display='none';
+    dropzone.querySelector('strong').textContent = '✅ '+file.name;
     initText(text);
   } catch(e) {
-    loading.style.display = 'none';
-    setStatus('Chyba: ' + e.message, true);
+    loading.style.display='none';
+    setStatus('Chyba: '+e.message, true);
   }
 }
 
 function initText(text) {
-  document.getElementById('charInfo').textContent = text.length.toLocaleString() + ' znaků';
+  document.getElementById('charInfo').textContent = text.length.toLocaleString()+' znaků';
   chunks   = chunkText(text);
   chapters = detectChapters(text, chunks);
   renderChapters();
   buildReaderView();
   curChunk = 0;
   document.getElementById('chunkInfo').textContent = `0 / ${chunks.length} úseků`;
-  ['btnPlay','btnPause','btnStop'].forEach(id => document.getElementById(id).disabled = false);
-
+  ['btnPlay','btnPause','btnStop'].forEach(id=>document.getElementById(id).disabled=false);
   const saved = loadProgress();
-  if (saved && saved.file === currentFile && saved.chunk > 0) {
-    curChunk = Math.min(saved.chunk, chunks.length - 1);
-    if (saved.rate)  { rateR.value  = saved.rate;  document.getElementById('rateVal').textContent  = parseFloat(saved.rate).toFixed(2)+'×'; }
-    if (saved.pitch) { pitchR.value = saved.pitch; document.getElementById('pitchVal').textContent = parseFloat(saved.pitch).toFixed(2); }
+  if (saved && saved.file===currentFile && saved.chunk>0) {
+    curChunk = Math.min(saved.chunk, chunks.length-1);
+    if (saved.rate)  { rateR.value=saved.rate;   document.getElementById('rateVal').textContent=parseFloat(saved.rate).toFixed(2)+'×'; }
+    if (saved.pitch) { pitchR.value=saved.pitch;  document.getElementById('pitchVal').textContent=parseFloat(saved.pitch).toFixed(2); }
     highlightChunk(curChunk);
-    setStatus(`📌 Pokračuj od úseku ${curChunk+1} — stiskni Přehrát`, false, false, true);
+    setStatus(`📌 Pokračuj od úseku ${curChunk+1} — stiskni Přehrát`,false,false,true);
   } else {
     setStatus(`${chunks.length} úseků · ${chapters.length} kapitol`);
   }
   loadBookmarks(); renderBookmarks();
 }
 
-// ─────────────────────────────────────────────
-//  PARSERS
-// ─────────────────────────────────────────────
+// ── PARSERS ──────────────────────────────────
 function loadScript(src) {
-  return new Promise((res, rej) => {
-    if (document.querySelector(`script[src="${src}"]`)) { res(); return; }
-    const s = document.createElement('script');
-    s.src = src; s.onload = res; s.onerror = () => rej(new Error('Nelze načíst: '+src));
+  return new Promise((res,rej)=>{
+    if (document.querySelector(`script[src="${src}"]`)){res();return;}
+    const s=document.createElement('script');
+    s.src=src; s.onload=res; s.onerror=()=>rej(new Error('Nelze načíst: '+src));
     document.head.appendChild(s);
   });
 }
-
 async function parsePDF(file) {
   await loadScript('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js');
-  const lib = window['pdfjs-dist/build/pdf'];
-  lib.GlobalWorkerOptions.workerSrc = '';
-  const buf = await file.arrayBuffer();
-  const pdf = await lib.getDocument({ data:buf, useWorkerFetch:false, isEvalSupported:false, useSystemFonts:true }).promise;
-  let out = '';
-  for (let i = 1; i <= pdf.numPages; i++) {
-    const page = await pdf.getPage(i);
-    const content = await page.getTextContent();
-    out += content.items.map(s => s.str).join(' ') + '\n\n';
+  const lib=window['pdfjs-dist/build/pdf'];
+  lib.GlobalWorkerOptions.workerSrc='';
+  const buf=await file.arrayBuffer();
+  const pdf=await lib.getDocument({data:buf,useWorkerFetch:false,isEvalSupported:false,useSystemFonts:true}).promise;
+  let out='';
+  for(let i=1;i<=pdf.numPages;i++){
+    const page=await pdf.getPage(i);
+    const content=await page.getTextContent();
+    out+=content.items.map(s=>s.str).join(' ')+'\n\n';
   }
   return out;
 }
-
 async function parseDOCX(file) {
   await loadScript('https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js');
-  const buf = await file.arrayBuffer();
-  const result = await mammoth.extractRawText({ arrayBuffer: buf });
+  const buf=await file.arrayBuffer();
+  const result=await mammoth.extractRawText({arrayBuffer:buf});
   return result.value;
 }
-
 async function parseEPUB(file) {
   await loadScript('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js');
-  const buf = await file.arrayBuffer();
-  const zip = await JSZip.loadAsync(buf);
-  let textParts = [], opfPath = null;
-  const containerFile = zip.file('META-INF/container.xml');
-  if (containerFile) {
-    const cText = await containerFile.async('string');
-    const m = cText.match(/full-path="([^"]+\.opf)"/i);
-    if (m) opfPath = m[1];
-  }
-  if (opfPath) {
-    const opfText = await zip.file(opfPath).async('string');
-    const base = opfPath.replace(/[^/]+$/, '');
-    const idrefs = [...opfText.matchAll(/<itemref[^>]+idref="([^"]+)"/gi)].map(m=>m[1]);
-    const items = {};
-    [...opfText.matchAll(/<item[^>]+id="([^"]+)"[^>]+href="([^"]+)"/gi)].forEach(m=>{items[m[1]]=m[2]});
-    for (const ref of idrefs) {
-      const href = items[ref]; if (!href) continue;
-      const f = zip.file(base+href)||zip.file(href); if (!f) continue;
+  const buf=await file.arrayBuffer();
+  const zip=await JSZip.loadAsync(buf);
+  let textParts=[],opfPath=null;
+  const cf=zip.file('META-INF/container.xml');
+  if(cf){const ct=await cf.async('string');const m=ct.match(/full-path="([^"]+\.opf)"/i);if(m)opfPath=m[1];}
+  if(opfPath){
+    const opf=await zip.file(opfPath).async('string');
+    const base=opfPath.replace(/[^/]+$/,'');
+    const idrefs=[...opf.matchAll(/<itemref[^>]+idref="([^"]+)"/gi)].map(m=>m[1]);
+    const items={};
+    [...opf.matchAll(/<item[^>]+id="([^"]+)"[^>]+href="([^"]+)"/gi)].forEach(m=>{items[m[1]]=m[2];});
+    for(const ref of idrefs){
+      const href=items[ref];if(!href)continue;
+      const f=zip.file(base+href)||zip.file(href);if(!f)continue;
       textParts.push(stripHtml(await f.async('string')));
     }
   }
-  if (!textParts.length) {
-    const promises = [];
-    zip.forEach((path, entry) => { if (/\.(html|xhtml|htm)$/i.test(path)) promises.push(entry.async('string').then(stripHtml)); });
-    textParts = await Promise.all(promises);
+  if(!textParts.length){
+    const ps=[];
+    zip.forEach((p,e)=>{if(/\.(html|xhtml|htm)$/i.test(p))ps.push(e.async('string').then(stripHtml));});
+    textParts=await Promise.all(ps);
   }
   return textParts.join('\n\n');
 }
-
-function stripHtml(html) {
-  const d = document.createElement('div'); d.innerHTML = html;
-  return d.innerText || d.textContent || '';
-}
-
+function stripHtml(html){const d=document.createElement('div');d.innerHTML=html;return d.innerText||d.textContent||'';}
 async function parseMOBI(file) {
-  const buf = await file.arrayBuffer();
-  const bytes = new Uint8Array(buf);
-  const dec = new TextDecoder('utf-8', {fatal:false});
-  let text = '';
-  for (let i = 0; i < bytes.length; i += 4096) text += dec.decode(bytes.slice(i, i+4096));
-  text = text.replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\uFFFF]/g,' ').replace(/\s{3,}/g,'\n\n');
-  const paragraphs = text.split('\n\n').filter(p => p.trim().length > 30 && /[a-záčďéěíňóřšůúýž]/i.test(p));
-  return paragraphs.join('\n\n') || text.slice(2048);
+  const buf=await file.arrayBuffer();
+  const bytes=new Uint8Array(buf);
+  const dec=new TextDecoder('utf-8',{fatal:false});
+  let text='';
+  for(let i=0;i<bytes.length;i+=4096)text+=dec.decode(bytes.slice(i,i+4096));
+  text=text.replace(/[^\x09\x0A\x0D\x20-\x7E\u00A0-\uFFFF]/g,' ').replace(/\s{3,}/g,'\n\n');
+  const ps=text.split('\n\n').filter(p=>p.trim().length>30&&/[a-záčďéěíňóřšůúýž]/i.test(p));
+  return ps.join('\n\n')||text.slice(2048);
 }
 
-// ─────────────────────────────────────────────
-//  CHUNKING
-// ─────────────────────────────────────────────
+// ── CHUNKING ─────────────────────────────────
 function chunkText(text) {
-  const sentences = text.match(/[^.!?…\n]+[.!?…\n]+|[^.!?…\n]+$/g) || [text];
-  const result = []; let buf = '';
-  for (const s of sentences) {
-    if ((buf+s).length > 220 && buf.length > 0) { result.push(buf.trim()); buf = s; }
-    else buf += s;
-  }
-  if (buf.trim()) result.push(buf.trim());
-  return result.filter(c => c.length > 0);
+  const s=text.match(/[^.!?…\n]+[.!?…\n]+|[^.!?…\n]+$/g)||[text];
+  const r=[];let buf='';
+  for(const x of s){if((buf+x).length>220&&buf.length>0){r.push(buf.trim());buf=x;}else buf+=x;}
+  if(buf.trim())r.push(buf.trim());
+  return r.filter(c=>c.length>0);
 }
 
-// ─────────────────────────────────────────────
-//  CHAPTERS
-// ─────────────────────────────────────────────
-function detectChapters(text, chunks) {
-  const chapPat = /^(kapitola\s+[\divxlc]+|chapter\s+[\divxlc]+|\d+\.\s+[A-ZÁČĎÉĚÍŇÓŘŠŮÚÝŽ].{2,}|[IVXLC]{2,6}\.\s+.{3,}|##?\s+.+)/im;
-  const chaps = [];
-  let pos = 0;
-  const cPos = chunks.map(c => { const p = pos; pos += c.length+1; return p; });
-  const lines = text.split('\n');
-  let charPos = 0;
-  for (const line of lines) {
-    const trimmed = line.trim();
-    if (trimmed.length > 2 && trimmed.length < 120 && chapPat.test(trimmed)) {
-      let ci = cPos.findIndex(p => p > charPos) - 1;
-      ci = Math.max(0, ci);
-      if (!chaps.length || chaps[chaps.length-1].chunkIndex !== ci)
-        chaps.push({ name: trimmed, chunkIndex: ci });
+// ── CHAPTERS ─────────────────────────────────
+function detectChapters(text,chunks){
+  const pat=/^(kapitola\s+[\divxlc]+|chapter\s+[\divxlc]+|\d+\.\s+[A-ZÁČĎÉĚÍŇÓŘŠŮÚÝŽ].{2,}|[IVXLC]{2,6}\.\s+.{3,}|##?\s+.+)/im;
+  const chaps=[];let pos=0;
+  const cPos=chunks.map(c=>{const p=pos;pos+=c.length+1;return p;});
+  const lines=text.split('\n');let charPos=0;
+  for(const line of lines){
+    const t=line.trim();
+    if(t.length>2&&t.length<120&&pat.test(t)){
+      let ci=cPos.findIndex(p=>p>charPos)-1;ci=Math.max(0,ci);
+      if(!chaps.length||chaps[chaps.length-1].chunkIndex!==ci)chaps.push({name:t,chunkIndex:ci});
     }
-    charPos += line.length + 1;
+    charPos+=line.length+1;
   }
   return chaps;
 }
-
-function renderChapters() {
-  const wrap = document.getElementById('chaptersWrap');
-  const list = document.getElementById('chapterList');
-  if (!chapters.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block'; list.innerHTML = '';
-  chapters.forEach((ch, i) => {
-    const div = document.createElement('div');
-    div.className = 'chap-item';
-    div.innerHTML = `<span class="chap-num">${i+1}</span><span class="chap-name">${escHtml(ch.name)}</span>`;
-    div.addEventListener('click', () => jumpToChunk(ch.chunkIndex));
+function renderChapters(){
+  const wrap=document.getElementById('chaptersWrap'),list=document.getElementById('chapterList');
+  if(!chapters.length){wrap.style.display='none';return;}
+  wrap.style.display='block';list.innerHTML='';
+  chapters.forEach((ch,i)=>{
+    const div=document.createElement('div');div.className='chap-item';
+    div.innerHTML=`<span class="chap-num">${i+1}</span><span class="chap-name">${escHtml(ch.name)}</span>`;
+    div.addEventListener('click',()=>jumpToChunk(ch.chunkIndex));
     list.appendChild(div);
   });
 }
-
-function updateActiveChapter(ci) {
-  const items = document.querySelectorAll('.chap-item');
-  let active = -1;
-  chapters.forEach((ch, i) => { if (ch.chunkIndex <= ci) active = i; });
-  items.forEach((el, i) => el.classList.toggle('active-chap', i === active));
+function updateActiveChapter(ci){
+  const items=document.querySelectorAll('.chap-item');let active=-1;
+  chapters.forEach((ch,i)=>{if(ch.chunkIndex<=ci)active=i;});
+  items.forEach((el,i)=>el.classList.toggle('active-chap',i===active));
 }
 
-// ─────────────────────────────────────────────
-//  READER VIEW
-// ─────────────────────────────────────────────
-function buildReaderView() {
-  const rv = document.getElementById('readerView');
-  rv.style.display = 'block';
-  rv.innerHTML = chunks.map((c,i) => `<span class="chunk" id="ck${i}">${escHtml(c)} </span>`).join('');
+// ── READER VIEW ──────────────────────────────
+function buildReaderView(){
+  const rv=document.getElementById('readerView');rv.style.display='block';
+  rv.innerHTML=chunks.map((c,i)=>`<span class="chunk" id="ck${i}">${escHtml(c)} </span>`).join('');
 }
-
-function escHtml(t) {
-  return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
-
-function highlightChunk(i) {
-  document.querySelectorAll('.chunk').forEach(el => el.classList.remove('active'));
-  const el = document.getElementById('ck'+i);
-  if (el) { el.classList.add('active'); el.scrollIntoView({behavior:'smooth',block:'center'}); }
-  document.getElementById('progressBar').style.width = (chunks.length > 1 ? i/(chunks.length-1)*100 : 100)+'%';
-  document.getElementById('chunkInfo').textContent = `${i+1} / ${chunks.length} úseků`;
+function escHtml(t){return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function highlightChunk(i){
+  document.querySelectorAll('.chunk').forEach(el=>el.classList.remove('active'));
+  const el=document.getElementById('ck'+i);
+  if(el){el.classList.add('active');el.scrollIntoView({behavior:'smooth',block:'center'});}
+  document.getElementById('progressBar').style.width=(chunks.length>1?i/(chunks.length-1)*100:100)+'%';
+  document.getElementById('chunkInfo').textContent=`${i+1} / ${chunks.length} úseků`;
   updateActiveChapter(i);
 }
 
-// ─────────────────────────────────────────────
-//  PLAYBACK
-// ─────────────────────────────────────────────
-function speakChunk(i) {
-  if (!isPlaying || i >= chunks.length) {
-    isPlaying = false;
-    if (i >= chunks.length) {
-      document.getElementById('progressBar').style.width = '100%';
-      setStatus('✅ Hotovo!', false, false, true);
-      saveProgress(); releaseWakeLock();
+// ── PLAYBACK ─────────────────────────────────
+function speakChunk(i){
+  if(!isPlaying||i>=chunks.length){
+    isPlaying=false;
+    if(i>=chunks.length){
+      document.getElementById('progressBar').style.width='100%';
+      setStatus('✅ Hotovo!',false,false,true);
+      saveProgress();releaseWakeLock();
     }
     return;
   }
-  curChunk = i;
-  highlightChunk(i);
-  setStatus(`▶ Úsek ${i+1} / ${chunks.length}`, false, true);
-  saveProgress();
-  ttsSpeak(chunks[i]);
+  curChunk=i;highlightChunk(i);
+  setStatus(`▶ Úsek ${i+1} / ${chunks.length}`,false,true);
+  saveProgress();ttsSpeak(chunks[i]);
+}
+function jumpToChunk(idx){
+  ttsStop();curChunk=idx;
+  if(isPlaying)setTimeout(()=>speakChunk(idx),150);
+  else{highlightChunk(idx);setStatus(`📌 Pozice: ${idx+1}`);}
 }
 
-function jumpToChunk(idx) {
-  ttsStop(); curChunk = idx;
-  if (isPlaying) setTimeout(() => speakChunk(idx), 150);
-  else { highlightChunk(idx); setStatus(`📌 Pozice: ${idx+1}`); }
-}
-
-// ─────────────────────────────────────────────
-//  BUTTONS
-// ─────────────────────────────────────────────
-document.getElementById('btnPlay').addEventListener('click', async () => {
-  if (!chunks.length) return;
-  ttsStop(); isPaused = false; isPlaying = true;
-  document.getElementById('btnPause').textContent = '⏸';
+// ── BUTTONS ──────────────────────────────────
+document.getElementById('btnPlay').addEventListener('click',async()=>{
+  if(!chunks.length)return;
+  ttsStop();isPaused=false;isPlaying=true;
+  document.getElementById('btnPause').textContent='⏸';
   await requestWakeLock();
-  setTimeout(() => speakChunk(curChunk), 150);
+  setTimeout(()=>speakChunk(curChunk),150);
 });
-
-document.getElementById('btnPause').addEventListener('click', () => {
-  if (!isPlaying) return;
-  if (!isPaused) {
-    ttsPause(); isPaused = true;
-    document.getElementById('btnPause').textContent = '▶';
-    setStatus('⏸ Pozastaveno'); releaseWakeLock();
-  } else {
-    isPaused = false;
-    document.getElementById('btnPause').textContent = '⏸';
-    setStatus('▶ Pokračuji…', false, true);
-    requestWakeLock(); ttsResume();
+document.getElementById('btnPause').addEventListener('click',()=>{
+  if(!isPlaying)return;
+  if(!isPaused){
+    ttsPause();isPaused=true;
+    document.getElementById('btnPause').textContent='▶';
+    setStatus('⏸ Pozastaveno');releaseWakeLock();
+  }else{
+    isPaused=false;
+    document.getElementById('btnPause').textContent='⏸';
+    setStatus('▶ Pokračuji…',false,true);
+    requestWakeLock();ttsResume();
   }
 });
-
-document.getElementById('btnStop').addEventListener('click', () => {
-  ttsStop(); isPaused = false; isPlaying = false;
-  document.getElementById('btnPause').textContent = '⏸';
-  setStatus('⏹ Zastaveno'); saveProgress(); releaseWakeLock();
+document.getElementById('btnStop').addEventListener('click',()=>{
+  ttsStop();isPaused=false;isPlaying=false;
+  document.getElementById('btnPause').textContent='⏸';
+  setStatus('⏹ Zastaveno');saveProgress();releaseWakeLock();
+});
+document.getElementById('btnBookmark').addEventListener('click',()=>{
+  if(!chunks.length)return;
+  if(bookmarks.find(b=>b.chunkIndex===curChunk)){setStatus('Záložka již existuje');return;}
+  bookmarks.push({chunkIndex:curChunk,label:`Úsek ${curChunk+1}`});
+  saveBookmarks();renderBookmarks();
+  setStatus(`🔖 Záložka: Úsek ${curChunk+1}`,false,false,true);
 });
 
-document.getElementById('btnBookmark').addEventListener('click', () => {
-  if (!chunks.length) return;
-  if (bookmarks.find(b => b.chunkIndex === curChunk)) { setStatus('Záložka již existuje'); return; }
-  bookmarks.push({ chunkIndex: curChunk, label: `Úsek ${curChunk+1}` });
-  saveBookmarks(); renderBookmarks();
-  setStatus(`🔖 Záložka: Úsek ${curChunk+1}`, false, false, true);
-});
-
-// ─────────────────────────────────────────────
-//  BOOKMARKS
-// ─────────────────────────────────────────────
-function renderBookmarks() {
-  const wrap = document.getElementById('bmWrap');
-  const list = document.getElementById('bmList');
-  if (!bookmarks.length) { wrap.style.display = 'none'; return; }
-  wrap.style.display = 'block'; list.innerHTML = '';
-  bookmarks.forEach((bm, i) => {
-    const tag = document.createElement('div');
-    tag.className = 'bm-tag';
-    tag.innerHTML = `<span>🔖 ${escHtml(bm.label)}</span><span class="bm-del">×</span>`;
-    tag.addEventListener('click', e => {
-      if (e.target.classList.contains('bm-del')) { bookmarks.splice(i,1); saveBookmarks(); renderBookmarks(); }
+// ── BOOKMARKS ────────────────────────────────
+function renderBookmarks(){
+  const wrap=document.getElementById('bmWrap'),list=document.getElementById('bmList');
+  if(!bookmarks.length){wrap.style.display='none';return;}
+  wrap.style.display='block';list.innerHTML='';
+  bookmarks.forEach((bm,i)=>{
+    const tag=document.createElement('div');tag.className='bm-tag';
+    tag.innerHTML=`<span>🔖 ${escHtml(bm.label)}</span><span class="bm-del">×</span>`;
+    tag.addEventListener('click',e=>{
+      if(e.target.classList.contains('bm-del')){bookmarks.splice(i,1);saveBookmarks();renderBookmarks();}
       else jumpToChunk(bm.chunkIndex);
     });
     list.appendChild(tag);
   });
 }
-function saveBookmarks() {
-  try { localStorage.setItem('daredevil_bm_'+currentFile, JSON.stringify(bookmarks)); } catch(e){}
+function saveBookmarks(){try{localStorage.setItem('daredevil_bm_'+currentFile,JSON.stringify(bookmarks));}catch(e){}}
+function loadBookmarks(){try{const d=localStorage.getItem('daredevil_bm_'+currentFile);bookmarks=d?JSON.parse(d):[];}catch(e){bookmarks=[];}}
+
+// ── PROGRESS ─────────────────────────────────
+function saveProgress(){
+  if(!currentFile)return;
+  try{localStorage.setItem(LS,JSON.stringify({file:currentFile,chunk:curChunk,rate:rateR.value,pitch:pitchR.value}));}catch(e){}
 }
-function loadBookmarks() {
-  try { const d = localStorage.getItem('daredevil_bm_'+currentFile); bookmarks = d ? JSON.parse(d) : []; } catch(e){ bookmarks=[]; }
+function loadProgress(){
+  try{const d=localStorage.getItem(LS);return d?JSON.parse(d):null;}catch(e){return null;}
 }
 
-// ─────────────────────────────────────────────
-//  PROGRESS (localStorage)
-// ─────────────────────────────────────────────
-function saveProgress() {
-  if (!currentFile) return;
-  try { localStorage.setItem(LS_KEY, JSON.stringify({file:currentFile, chunk:curChunk, rate:rateR.value, pitch:pitchR.value})); } catch(e){}
-}
-function loadProgress() {
-  try { const d = localStorage.getItem(LS_KEY); return d ? JSON.parse(d) : null; } catch(e){ return null; }
-}
-
-// ─────────────────────────────────────────────
-//  STATUS
-// ─────────────────────────────────────────────
-function setStatus(msg, err=false, playing=false, ok=false) {
-  const s = document.getElementById('status');
-  s.textContent = msg;
-  s.className = 'status'+(err?' error':playing?' playing':ok?' ok':'');
+// ── STATUS ───────────────────────────────────
+function setStatus(msg,err=false,playing=false,ok=false){
+  const s=document.getElementById('status');
+  s.textContent=msg;
+  s.className='status'+(err?' error':playing?' playing':ok?' ok':'');
 }
 </script>
 </body>
